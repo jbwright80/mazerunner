@@ -11,16 +11,19 @@
 .equ UBRR1L, 0xcc
 
 .equ UCSR1C, 0xca
-
-UMSEL11
-UMSEL10
-UPM11
-UPM10
-USBS1
-UCSZ11/UDORD0
-UCSZ10/UCPHA0
-UCPOL1
-
+; USART1 Control and Status Register C
+; UCSZ11/UDORD0 and UCPHA0/UCPOL1 share same bit space,
+; but carry different meaning depending on SPI mode
+.equ UMSEL11, 7
+.equ UMSEL10, 6
+.equ UPM11, 5
+.equ UPM10, 4
+.equ USBS1, 3
+.equ UCSZ11, 2
+.equ UDORD0, 2
+.equ UCSZ10, 1
+.equ UCPHA0, 1
+.equ UCPOL1, 0
 
 .equ UCSR1B, 0xc9
 .equ UCSR1A, 0xc8
