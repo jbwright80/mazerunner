@@ -163,11 +163,40 @@ TCCR2A, 0xb0 ; TCCR2A – Timer/Counter Control Register A
 .equ TCNT1L, 0x84
 
 
-.equ TCCR1C, 0x82
-.equ TCCR1B, 0x81
-.equ TCCR1A, 0x80
-.equ DIDR1, 0x7f
-.equ DIDR0, 0x7e
+.equ TCCR1C, 0x82 ; Timer/Counter 1 Control Register C
+.equ FOC1A, 7
+.equ FOC1B, 6
+
+.equ TCCR1B, 0x81 ; Timer/Counter 1 Control Register B
+.equ ICNC1, 7
+.equ ICES1, 6
+.equ WGM13, 4
+.equ WGM12, 3
+.equ CS12, 2
+.equ CS11, 1
+.equ CS10, 0
+
+.equ TCCR1A, 0x80 ; Timer/Counter 1 Control Register A
+COM1A1, 7
+COM1A0, 6
+COM1B1, 5
+COM1B0, 4
+WGM11, 1
+WGM10, 0
+
+.equ DIDR1, 0x7f ; Digital Input Disable Register 1
+.equ AIN1D, 1
+.equ AIN0D, 0
+
+.equ DIDR0, 0x7e ; Digital Input disable Register 0
+.equ ADC7D, 7
+.equ ADC6D, 6
+.equ ADC5D, 5
+.equ ADC4D, 4
+.equ ADC3D, 3
+.equ ADC2D, 2
+.equ ADC1D, 1
+.equ ADC0D, 0
 
 .equ ADMUX, 0x7c
 .equ ADCSRB, 0x7b
@@ -233,7 +262,7 @@ TCCR2A, 0xb0 ; TCCR2A – Timer/Counter Control Register A
 
 .equ EIMSK, 0x1d
 
-.equ EIFR, 0x1c
+.equ EIFR, 0x1cd
 .equ PCIFR, 0x1b
 
 .equ TIFR3, 0x18
