@@ -20,7 +20,7 @@
 timer0_counter:
     .byte 0
 
-; The timer flag for storing the state values. 
+; The timer flag for storing the state values.
 timer0_flag:
     .byte 0
 
@@ -47,6 +47,8 @@ timer0_init:
     ret
 
 timer0_start:
+    push r16
+
     ; clear counter variable and set flag=running
     sts timer0_counter, r0
     sts timer0_flag, r1
@@ -55,14 +57,16 @@ timer0_start:
     ldi r16, (1 << CS02) | (0 << CS01) | (0 << CS00)
     out TCCR0B, r16
 
+    pop r16
     ret
 
 timer0_halt:
     ; Disable Timer0
-     out TCCR0A, r0
-     out TCCR0B, r0
+    out TCCR0A, r0
+    out TCCR0B, r0
+    sts timer0_flag, r0 ; (stopped)
 
-     ret
+    ret
 
 
 ; *********************************
