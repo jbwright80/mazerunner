@@ -71,7 +71,22 @@ usart_putc_wait:
     ret
 
 usart_ack:
-    ldi r16, 0x4f ; O
+    ldi r16, 0x41 ; A
+    rcall usart_putc
+    ldi r16, 0x63 ; c
+    rcall usart_putc
+    ldi r16, 0x6b ; k
+    rcall usart_putc
+    ldi r16, 0x0d
+    rcall usart_putc
+    ldi r16, 0x0a
+    rcall usart_putc
+    ret
+
+usart_nak:
+    ldi r16, 0x4e ; N
+    rcall usart_putc
+    ldi r16, 0x61 ; a
     rcall usart_putc
     ldi r16, 0x6b ; k
     rcall usart_putc
