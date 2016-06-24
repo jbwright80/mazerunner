@@ -2,20 +2,20 @@
 ; It is used as a timeout for incoming packets on the USART.
 ; The flag will have 3 states: 0=stopped, 1=running, 2=timeout.
 
-; The timer is started when a character is received from the USART while in state=stopped.
-; the timer will be set to state=running, and an index variable for an 8-byte buffer will be maintained.
-; When started, the timer will count to ~133.3 msec (2x round-trip time for 8 bytes across 8 nodes at 9600 buad.)
+; The timer is started/restarted when the start-byte character is received from the USART.
+; The timer will be set to state=running, and an index variable for an 8-byte buffer will be maintained.
+; When started, the timer will count to ~150 msec (2x round-trip time for 8 bytes across 9 nodes at 9600 buad.)
 ; As each byte comes in, the index will be incremented and the buffer will be populated.
 ; When the 8th byte is received, the timer is set to state=stopped, and a call can be made to handle the complete packet. Ensure fault light is clear
 ; If the timeout period is allowed to elapse, the timer will be stopped and enter state=timeout. Turn on fault light
-; If a byte comes in with state=timeout, the timer will be restarted, index=0, and that byte is placed at the beginning of the packet buffer.
+; If state=timeout, only an incoming start byte will restart the timer & index.
 
 .include "m644pa.inc"
 
 ; **** DATA ****
 .data
 
-; This counter will allow for a count of decimal value 30; representing ~133.3 msec
+; This counter will allow for a count of decimal value 34; representing ~150 msec
 ; The counter will increment upon overflow interrupt; @ 14.7456 Mhz with f/256
 timer0_counter:
     .byte 0
@@ -77,15 +77,15 @@ timer0_halt:
 ; r21: flag
 
 vect_TIMER0_OVF:
-
     cli ; disable global interrupts
+    push r20
+    push r21
+
     ; load in sram variables
     lds r20, timer0_counter
     lds r21, timer0_flag
 
-    ; first check to see if we have hit 30 counts (~133.3 msec)
-    ldi r16, 30
-    cp r20, r16
+    cpi r20, 34 ; first check to see if we have hit 34 counts (~150 msec)
     brne vect_TIMER0_OVF_keep_counting
         ; we have hit 30; timeout has occurred.
         ; stop the timer, reset counts to 0, set flag=timeout
@@ -102,6 +102,9 @@ vect_TIMER0_OVF_done:
     ; store sram variables
     sts timer0_counter, r20
     sts timer0_flag, r21
+    pop r21
+    pop r20
     sei ; enable global interrupts again
 
     reti
+
