@@ -96,6 +96,7 @@ packet_insert:
     brne packet_insert_cont
     clr r18                   ; roll index back to zero
     call packet_transmit      ; print out the current buffer
+    call packet_validate
 packet_insert_cont:
     sts packet_index, r18
 
@@ -141,13 +142,10 @@ packet_validate_loop:
     brne packet_validate_fail
     ; comparison matched, return success
     mov r16, r0
-    ;out PORTC, r0 ; ** temporary: make sure LED is off, no problems
     rjmp packet_validate_exit
 
 packet_validate_fail:
     mov r16, r1
-    ;
-    out PORTC, r1 ; ** temporary: turn LED on to indicate failure
 
 packet_validate_exit:
     pop r27
