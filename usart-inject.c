@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
     set_blocking (fd, 1);
 
     write (fd, data_out, 8);
+    usleep(1000);
 
     // Capture entire frame
     for (i = 0; i < 8; ++i) {
