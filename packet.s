@@ -81,6 +81,13 @@ packet_insert:
 
     lds r18, packet_index
 
+    ; when starting out at index 0, make sure the first byte is 0xAA.
+    cp r18, r0
+    brne packet_insert_start_skip
+    cpi r16, 0xAA
+    brne packet_insert_exit ; First byte of frame isn't 0xAA, ignore byte.
+packet_insert_start_skip:
+
     ; write packet buffer address + offset to X register
     ldi r26, lo8(packet_buffer)
     ldi r27, hi8(packet_buffer)
