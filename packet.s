@@ -34,6 +34,7 @@ packet_init_buffer_loop:
     ret
 
 
+; Update the current packet buffer with a freshly calculated checksum.
 packet_calc_checksum:
     push r16
     push r17
@@ -94,9 +95,15 @@ packet_insert:
 
     cpi r18, 8                ; end of array
     brne packet_insert_cont
+    ; Complete Packet
     clr r18                   ; roll index back to zero
-    call packet_transmit      ; print out the current buffer
     call packet_validate
+    cp r16, r0
+    brne packet_insert_cont   ; invalid packet, do not transmit, carry on
+
+    call packet_inc_hop
+    call packet_transmit      ; print out the current buffer
+
 packet_insert_cont:
     sts packet_index, r18
 
@@ -190,3 +197,21 @@ packet_transmit_wait_until_ready:            ; loop until Data Register Empty fl
     pop r16
     ret
 
+
+
+
+; Increment packet hop count and re-calculate checksum
+packet_inc_hop:
+    push r16
+
+    lds r16, packet_buffer + 6
+    inc r16
+    sts packet_buffer + 6, r16
+    call packet_calc_checksum
+
+    pop r16
+    ret
+
+; Received a complete packet that passes checksum: determine what to do with it.
+packet_decode:
+    ret
