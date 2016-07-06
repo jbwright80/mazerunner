@@ -61,7 +61,6 @@ main:
     call usart_init
     call timer0_init
     call packet_init_buffer
-    call usart_ack
 
     ; Enable global interrupts after everything is initialized
     sei
