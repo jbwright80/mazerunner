@@ -4,21 +4,21 @@
 .text
 
 ;
-; USART0 Receive complete vector handler
+; USART1 Receive complete vector handler
 ;
-; Receive Complete RXC0 flag (in UCSRnA) is high when unread data is present in the receive buffer.
+; Receive Complete RXC1 flag (in UCSRnA) is high when unread data is present in the receive buffer.
 ;
 
-vect_USART0_RX:
+vect_USART1_RX:
 
     ; A character has been received, place it in r16 and call packet handling routine
-    lds r16, UDR0
+    lds r16, UDR1
     call packet_insert
 
     reti
 
 ;
-; USART0 Initialization
+; USART1 Initialization
 ;
 
 usart_init:
@@ -26,16 +26,16 @@ usart_init:
     ; Set baud rate to 9600
     ldi r16, 0
     ldi r17, 95
-    sts UBRR0H, r16
-    sts UBRR0L, r17
+    sts UBRR1H, r16
+    sts UBRR1L, r17
 
     ; Enable transmitter & receiver, enable RX Complete interrupt
-    ldi r17, (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0)
-    sts UCSR0B, r17
+    ldi r17, (1 << TXEN1) | (1 << RXEN1) | (1 << RXCIE1)
+    sts UCSR1B, r17
 
     ; Set frame format: 8 data bits, 1 stop bit, no parity.
-    ldi r17, (1 << UCSZ01) | (1 << UCSZ00)
-    sts UCSR0C, r17
+    ldi r17, (1 << UCSZ11) | (1 << UCSZ10)
+    sts UCSR1C, r17
 
     ret
 
@@ -47,10 +47,10 @@ usart_init:
 ;
 usart_getc:
 
-    lds r16, UCSR0A
-    sbrs r16, RXC0
+    lds r16, UCSR1A
+    sbrs r16, RXC1
     rjmp usart_getc
-    lds r16, UDR0
+    lds r16, UDR1
 
     ret
 
@@ -62,10 +62,10 @@ usart_putc:
     push r17
 
 usart_putc_wait:
-    lds r17, UCSR0A       ; while clear, data transmission is already in progress
-    sbrs r17, UDRE0
+    lds r17, UCSR1A       ; while clear, data transmission is already in progress
+    sbrs r17, UDRE1
     rjmp usart_putc_wait
-    sts UDR0, r16         ; store to USART data register (initiates transmit)
+    sts UDR1, r16         ; store to USART data register (initiates transmit)
 
     pop r17
     ret
