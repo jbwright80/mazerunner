@@ -1,3 +1,3 @@
 #!/bin/bash
 
-avrdude -c avrftdi -p m644 -P usb
+avrdude -c avrispmkii -p m644 -P usb
