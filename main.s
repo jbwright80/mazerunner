@@ -60,6 +60,7 @@ vect_RESET:
 
 
 main:
+    call debug_init
     call dc_init
     call usart_init
     call timer0_init
