@@ -39,3 +39,93 @@ dc_fire0:
     pop r16
     ret
 
+dc_fire1:
+    push r16
+
+    in r16, PORTB
+    ori r16, 0b00000100
+    out PORTB, r16
+    call delay_500ms
+    andi r16, 0b11111011
+    out PORTB, r16
+
+    pop r16
+    ret
+
+dc_fire2:
+    push r16
+
+    in r16, PORTB
+    ori r16, 0b00001000
+    out PORTB, r16
+    call delay_500ms
+    andi r16, 0b11110111
+    out PORTB, r16
+
+    pop r16
+    ret
+
+dc_fire3:
+    push r16
+
+    in r16, PORTB
+    ori r16, 0b00010000
+    out PORTB, r16
+    call delay_500ms
+    andi r16, 0b11101111
+    out PORTB, r16
+
+    pop r16
+    ret
+
+dc_fire4:
+    push r16
+
+    in r16, PORTB
+    ori r16, 0b00010000
+    out PORTB, r16
+    call delay_500ms
+    andi r16, 0b11101111
+    out PORTB, r16
+
+    pop r16
+    ret
+
+dc_fire5:
+    push r16
+
+    in r16, PORTB
+    ori r16, 0b00100000
+    out PORTB, r16
+    call delay_500ms
+    andi r16, 0b11011111
+    out PORTB, r16
+
+    pop r16
+    ret
+
+dc_fire6:
+    push r16
+
+    in r16, PORTB
+    ori r16, 0b01000000
+    out PORTB, r16
+    call delay_500ms
+    andi r16, 0b10111111
+    out PORTB, r16
+
+    pop r16
+    ret
+
+dc_fire7:
+    push r16
+
+    in r16, PORTB
+    ori r16, 0b10000000
+    out PORTB, r16
+    call delay_500ms
+    andi r16, 0b01111111
+    out PORTB, r16
+
+    pop r16
+    ret
