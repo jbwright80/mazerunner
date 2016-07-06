@@ -53,18 +53,13 @@ vect_RESET:
 
 
 main:
-    ; use bit 0 of port c as led output
-    ; led starts out as being off
-    out DDRC, r1
-    out PORTC, r0
-
+    call dc_init
     call usart_init
     call timer0_init
     call packet_init_buffer
 
     ; Enable global interrupts after everything is initialized
     sei
-
 
 main_loop:
     rjmp main_loop
