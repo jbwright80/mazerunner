@@ -66,9 +66,13 @@ main:
 
     ; Do the rest
     call dc_init
+    call input_init
     call usart_init
     call timer0_init
     call packet_init_buffer
+
+    ; Read input switches and decide if manual gate operation is needed
+    call logic_process_switches
 
     ; Enable global interrupts after everything is initialized
     sei
