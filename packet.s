@@ -93,23 +93,19 @@ packet_insert_start_skip:
     ldi r27, hi8(packet_buffer)
     add r26, r18
     adc r27, r0
-
-    ; store byte
-    st X, r16
-
-    ; increment offset
-    inc r18
-
+    st X, r16                 ; store byte
+    inc r18                   ; increment offset
     cpi r18, 8                ; end of array
     brne packet_insert_cont
-    ; Complete Packet
+
+    ; *** Complete Packet ***
     clr r18                   ; roll index back to zero
     call packet_validate
     cp r16, r0
-    brne packet_insert_cont   ; invalid packet, do not transmit, carry on
+    brne packet_insert_cont   ; invalid packet, do nothing further.
 
-    call packet_inc_hop
-    call packet_transmit      ; print out the current buffer
+    ; Determine what to do with the packet
+    call logic_process_packet
 
 packet_insert_cont:
     sts packet_index, r18
@@ -205,20 +201,31 @@ packet_transmit_wait_until_ready:            ; loop until Data Register Empty fl
     ret
 
 
-
-
-; Increment packet hop count and re-calculate checksum
+; Increment packet hop count
 packet_inc_hop:
     push r16
 
     lds r16, packet_buffer + 6
     inc r16
     sts packet_buffer + 6, r16
-    call packet_calc_checksum
 
     pop r16
     ret
 
-; Received a complete packet that passes checksum: determine what to do with it.
-packet_decode:
+; modify buffer to acknowledge reception and handling of packet addressed to master
+packet_ack:
+    ; Set index to Ack byte in packet buffer
+    sts packet_buffer + 5, r1
+    ret
+
+
+; Modify buffer to negatively acknowledge reception and handling of packet addressed to master
+packet_nak:
+    push r16
+
+    ldi r16, 1                   ; Node Number (Master)
+    sbr r16, 0b10000000          ; MSB set for negative ack
+    sts packet_buffer + 5, r16
+
+    pop r16
     ret
