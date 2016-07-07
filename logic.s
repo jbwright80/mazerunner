@@ -55,3 +55,8 @@ logic_process_switches:
 
     pop r16
     ret
+
+
+logic_process_packet:
+    call debug_led_on
+    ret

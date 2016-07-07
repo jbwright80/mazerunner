@@ -51,6 +51,7 @@ packet_calc_checksum_loop:
     add r17, r18
     dec r16
     brne packet_calc_checksum_loop
+    neg r17 ; two's compliment
     st X, r17
 
     pop r27
@@ -148,6 +149,7 @@ packet_validate_loop:
     ; done
 
     ld r20, X+ ; next byte read is checksum
+    neg r17 ; two's compliment
     cp r17, r20
     brne packet_validate_fail
     ; comparison matched, return success
