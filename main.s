@@ -60,7 +60,11 @@ vect_RESET:
 
 
 main:
+    ; Basic init
     call debug_init
+    call debug_check_brownout
+
+    ; Do the rest
     call dc_init
     call usart_init
     call timer0_init
