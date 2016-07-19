@@ -9,6 +9,9 @@ packet_index:
 packet_buffer:
     .byte 0, 0, 0, 0, 0, 0, 0, 0
 
+packet_buffer2:
+    .byte 0, 0, 0, 0, 0, 0, 0, 0
+
 .text
 
 packet_init_buffer:
@@ -30,6 +33,72 @@ packet_init_buffer_loop:
 
     pop r27
     pop r26
+    pop r16
+    ret
+
+packet_swap_buffer:
+    push r16
+    push r17
+
+    ; Offset 0
+    lds r16, packet_buffer
+    lds r17, packet_buffer2
+    sts packet_buffer2, r16
+    sts packet_buffer, r17
+
+    ; Offset 1
+    lds r16, packet_buffer + 1
+    lds r17, packet_buffer2 + 1
+    sts packet_buffer2 + 1, r16
+    sts packet_buffer + 1, r17
+
+    ; Offset 2
+    lds r16, packet_buffer + 2
+    lds r17, packet_buffer2 + 2
+    sts packet_buffer2 + 2, r16
+    sts packet_buffer + 2, r17
+
+    ; Offset 3
+    lds r16, packet_buffer + 3
+    lds r17, packet_buffer2 + 3
+    sts packet_buffer2 + 3, r16
+    sts packet_buffer + 3, r17
+
+    ; Offset 4
+    lds r16, packet_buffer + 4
+    lds r17, packet_buffer2 + 4
+    sts packet_buffer2 + 4, r16
+    sts packet_buffer + 4, r17
+
+    ; Offset 5
+    lds r16, packet_buffer + 5
+    lds r17, packet_buffer2 + 5
+    sts packet_buffer2 + 5, r16
+    sts packet_buffer + 5, r17
+
+    ; Offset 6
+    lds r16, packet_buffer + 6
+    lds r17, packet_buffer2 + 6
+    sts packet_buffer2 + 6, r16
+    sts packet_buffer + 6, r17
+
+    ; Offset 7
+    lds r16, packet_buffer + 7
+    lds r17, packet_buffer2 + 7
+    sts packet_buffer2 + 7, r16
+    sts packet_buffer + 7, r17
+
+    pop r17
+    pop r16
+    ret
+
+packet_new:
+    push r16
+
+    call packet_init_buffer
+    ldi r16, 0xAA
+    sts packet_buffer, r16
+
     pop r16
     ret
 
@@ -171,7 +240,7 @@ packet_validate_exit:
 
 
 ;
-; Transmit packet
+; Transmit packet on USART1
 ;
 
 packet_transmit:
@@ -186,12 +255,12 @@ packet_transmit:
     ldi r27, hi8(packet_buffer)
 
 packet_transmit_wait_until_ready:            ; loop until Data Register Empty flag is set
-    lds r17, UCSR0A                          ; while clear, data transmission is already in progress
-    sbrs r17, UDRE0
+    lds r17, UCSR1A                          ; while clear, data transmission is already in progress
+    sbrs r17, UDRE1
     rjmp packet_transmit_wait_until_ready
 
     ld r18, X+                               ; read next byte in buffer
-    sts UDR0, r18                            ; store to USART data register (initiates transmit)
+    sts UDR1, r18                            ; store to USART data register (initiates transmit)
     dec r16
     brne packet_transmit_wait_until_ready
 
@@ -213,6 +282,37 @@ packet_inc_hop:
 
     pop r16
     ret
+
+
+; Set packet address (specified in r16)
+packet_set_address:
+    sts packet_buffer + 6, r16
+    ret
+
+
+; Set packet hop count (specified in r16)
+packet_set_hop:
+    sts packet_buffer + 1, r16
+    ret
+
+
+; Set packet command byte (specified in r16)
+packet_set_command:
+   sts packet_buffer + 2, r16
+   ret
+
+
+; Set packet arg1 byte (specified in r16)
+packet_set_arg1:
+   sts packet_buffer + 3, r16
+   ret
+
+
+; Set packet arg2 byte (specified in r16)
+packet_set_arg2:
+   sts packet_buffer + 4, r16
+   ret
+
 
 ; modify buffer to acknowledge reception and handling of packet addressed to master
 packet_ack:
