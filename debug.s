@@ -34,6 +34,29 @@ debug_led_off:
     ret
 
 
+debug_5blips:
+    push r16
+
+    ldi r16, 5
+debug_5blips_loop:
+    call debug_led_on
+    call delay_50ms
+    call debug_led_off
+    call delay_50ms
+    dec r16
+    brne debug_5blips_loop
+
+    pop r16
+    ret
+
+
+debug_500msOn:
+    call debug_led_on
+    call delay_500ms
+    call debug_led_off
+    ret
+
+
 debug_check_brownout:
     push r16
 
