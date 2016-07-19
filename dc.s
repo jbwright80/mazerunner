@@ -35,6 +35,7 @@ dc_fire0:
     call delay_500ms
     andi r16, 0b11111101
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
@@ -48,6 +49,7 @@ dc_fire1:
     call delay_500ms
     andi r16, 0b11111011
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
@@ -61,6 +63,7 @@ dc_fire2:
     call delay_500ms
     andi r16, 0b11110111
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
@@ -74,6 +77,7 @@ dc_fire3:
     call delay_500ms
     andi r16, 0b11101111
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
@@ -87,6 +91,7 @@ dc_fire4:
     call delay_500ms
     andi r16, 0b11101111
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
@@ -100,6 +105,7 @@ dc_fire5:
     call delay_500ms
     andi r16, 0b11011111
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
@@ -113,6 +119,7 @@ dc_fire6:
     call delay_500ms
     andi r16, 0b10111111
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
@@ -126,6 +133,7 @@ dc_fire7:
     call delay_500ms
     andi r16, 0b01111111
     out PORTB, r16
+    call delay_50ms
 
     pop r16
     ret
