@@ -18,7 +18,7 @@ vect_USART1_RX:
     reti
 
 ;
-; USART1 Initialization
+; USART Initialization
 ;
 
 usart_init:
@@ -26,15 +26,21 @@ usart_init:
     ; Set baud rate to 9600
     ldi r16, 0
     ldi r17, 95
+    sts UBRR0H, r16
+    sts UBRR0L, r17
     sts UBRR1H, r16
     sts UBRR1L, r17
 
-    ; Enable transmitter & receiver, enable RX Complete interrupt
+    ; Enable transmitter & receiver for USART0
+    ldi r17, (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0)
+    sts UCSR0B, r17
+    ; Enable transmitter & receiver, enable RX Complete interrupt for USART1
     ldi r17, (1 << TXEN1) | (1 << RXEN1) | (1 << RXCIE1)
     sts UCSR1B, r17
 
     ; Set frame format: 8 data bits, 1 stop bit, no parity.
     ldi r17, (1 << UCSZ11) | (1 << UCSZ10)
+    sts UCSR0C, r17
     sts UCSR1C, r17
 
     ret
