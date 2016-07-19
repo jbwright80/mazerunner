@@ -4,6 +4,13 @@
 #include <termios.h>
 #include <unistd.h>
 
+    //char *portname = "/dev/ttyUSB3";
+
+    unsigned char data_out[8] = {0xaa, 0x01, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00};
+    unsigned char data_in[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    unsigned char byte_in;
+    unsigned char crc;
+    int i, fd;
 
 
 int set_interface_attribs (int fd, int speed, int parity)
@@ -64,30 +71,9 @@ void set_blocking (int fd, int should_block)
         printf("error %d setting term attributes", errno);
 }
 
-
-int main(int argc, char *argv[])
+void capture()
 {
 
-    char *portname = "/dev/ttyUSB1";
-
-    unsigned char data_out[8] = {0xaa, 0x01, 0x10, 0x00, 0x00, 0x00, 0x00, 0xBB};
-    unsigned char data_in[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-    unsigned char byte_in;
-
-    int i, fd;
-
-
-    fd = open (portname, O_RDWR | O_NOCTTY | O_SYNC);
-    if (fd < 0)
-    {
-        printf("error %d opening %s: %s", errno, portname, strerror (errno));
-        return;
-    }
-
-    set_interface_attribs (fd, B9600, 0);  // set speed to 9,600 bps, 8n1 (no parity)
-    set_blocking (fd, 1);
-
-    write (fd, data_out, 8);
     usleep(1000);
 
     // Capture entire frame
@@ -113,5 +99,37 @@ int main(int argc, char *argv[])
     }
     printf("\n");
 
+}
+
+void calc_crc()
+{
+    crc = data_out[0] + data_out[1] + data_out[2] + data_out[3] + data_out[4] + data_out[5] + data_out[6];
+    crc = ~crc + 1;
+    data_out[7] = crc;
+
+    printf("crc is 0x%02X\n", crc);
+}
+
+int main(int argc, char *argv[])
+{
+    fd = open (argv[1], O_RDWR | O_NOCTTY | O_SYNC);
+    printf("Using %s\n", argv[1]);
+    if (fd < 0)
+    {
+        printf("error %d opening %s: %s", errno, argv[1], strerror (errno));
+        return;
+    }
+
+    set_interface_attribs (fd, B9600, 0);  // set speed to 9,600 bps, 8n1 (no parity)
+    set_blocking (fd, 1);
+
+    calc_crc();
+    write (fd, data_out, 8);
+    usleep(20000);
+
+    data_out[2] = 0x11;
+    data_out[3] = 0x01;
+    calc_crc();
+    write (fd, data_out, 8);
 }
 
