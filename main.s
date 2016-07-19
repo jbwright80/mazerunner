@@ -71,11 +71,25 @@ main:
     call timer0_init
     call packet_init_buffer
 
-    ; Read input switches and decide if manual gate operation is needed
-    call logic_process_switches
-
     ; Enable global interrupts after everything is initialized
     sei
 
+    ; Begin
+    call debug_5blips
+
+    ; Read input switches and decide if manual gate operation is needed
+    call logic_process_switches
+
+
+
+    ; Sit and wait for packets
 main_loop:
     rjmp main_loop
+
+    ; Halt and blink our light.
+main_halt:
+    call debug_led_on
+    call delay_50ms
+    call debug_led_off
+    call delay_50ms
+    rjmp main_halt
