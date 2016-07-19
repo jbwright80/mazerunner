@@ -22,6 +22,29 @@ delay_500ms_L1:
     ret
 
 
+delay_200ms:
+    push r18
+    push r19
+    push r20
+
+    ldi  r18, 15
+    ldi  r19, 246
+    ldi  r20, 250
+delay_200ms_L1:
+    dec  r20
+    brne delay_200ms_L1
+    dec  r19
+    brne delay_200ms_L1
+    dec  r18
+    brne delay_200ms_L1
+    nop
+
+    pop r20
+    pop r19
+    pop r18
+    ret
+
+
 delay_50ms:
     push r18
     push r19
