@@ -85,12 +85,12 @@ dc_fire3:
 dc_fire4:
     push r16
 
-    in r16, PORTB
+    in r16, PORTD
     ori r16, 0b00010000
-    out PORTB, r16
+    out PORTD, r16
     call delay_500ms
     andi r16, 0b11101111
-    out PORTB, r16
+    out PORTD, r16
     call delay_50ms
 
     pop r16
@@ -99,12 +99,12 @@ dc_fire4:
 dc_fire5:
     push r16
 
-    in r16, PORTB
+    in r16, PORTD
     ori r16, 0b00100000
-    out PORTB, r16
+    out PORTD, r16
     call delay_500ms
     andi r16, 0b11011111
-    out PORTB, r16
+    out PORTD, r16
     call delay_50ms
 
     pop r16
@@ -113,12 +113,12 @@ dc_fire5:
 dc_fire6:
     push r16
 
-    in r16, PORTB
+    in r16, PORTD
     ori r16, 0b01000000
-    out PORTB, r16
+    out PORTD, r16
     call delay_500ms
     andi r16, 0b10111111
-    out PORTB, r16
+    out PORTD, r16
     call delay_50ms
 
     pop r16
@@ -127,12 +127,12 @@ dc_fire6:
 dc_fire7:
     push r16
 
-    in r16, PORTB
+    in r16, PORTD
     ori r16, 0b10000000
-    out PORTB, r16
+    out PORTD, r16
     call delay_500ms
     andi r16, 0b01111111
-    out PORTB, r16
+    out PORTD, r16
     call delay_50ms
 
     pop r16
