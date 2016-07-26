@@ -4,9 +4,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-    //char *portname = "/dev/ttyUSB3";
-
-    unsigned char data_out[8] = {0xaa, 0x01, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00};
+    unsigned char data_out[8] = {0xaa, 0x01, 0x80, 0x02, 0x01, 0x00, 0x00, 0x00};
     unsigned char data_in[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     unsigned char byte_in;
     unsigned char crc;
@@ -123,12 +121,6 @@ int main(int argc, char *argv[])
     set_interface_attribs (fd, B9600, 0);  // set speed to 9,600 bps, 8n1 (no parity)
     set_blocking (fd, 1);
 
-    calc_crc();
-    write (fd, data_out, 8);
-    usleep(20000);
-
-    data_out[2] = 0x11;
-    data_out[3] = 0x01;
     calc_crc();
     write (fd, data_out, 8);
 }
